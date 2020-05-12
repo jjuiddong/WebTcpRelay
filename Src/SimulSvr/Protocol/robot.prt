@@ -1,0 +1,10 @@
+//
+// robot realtime information protocol
+//
+
+protocol s2s 100
+{
+
+	RealTimeInfo( string msg );
+
+}

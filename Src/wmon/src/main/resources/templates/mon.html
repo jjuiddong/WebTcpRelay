@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Robot Monitoring</title>
+    <script type="text/javascript" src="assets/three/three.js"></script>
+    <script type="text/javascript" src="assets/three/stats.js"></script>
+    <script type="text/javascript" src="assets/three/dat.gui.js"></script>
+    <script type="text/javascript" src="assets/three/CameraControls.js"></script>
+    <script type="text/javascript" src="assets/3dmon.js"></script>
+</head>
+<body>
+
+<div id="Stats-output">
+</div>
+<!-- Div which will hold the Output -->
+<div id="WebGL-output">
+</div>
+
+	<script type="text/javascript">
+	
+	    var _wsUri = "ws://jjuiddong.iptime.org:8080/wsock";
+	    var _websocket;
+	    var _mon3d;
+
+        
+	    function init() {
+	        //_output = document.getElementById("output");
+
+	        _websocket = new WebSocket(_wsUri);
+	        _websocket.onopen = function (evt) {onOpen(evt)};
+	        _websocket.onmessage = function (evt) {onMessage(evt)};
+	        _websocket.onerror = function (evt) {onError(evt)};
+	        
+	        _mon3d = new Mon3D();
+	        render();
+	    }//~init()
+	    
+	    
+	    function render() {
+		    // render using requestAnimationFrame
+	    	requestAnimationFrame(render);
+	    	_mon3d.render();
+	    }
+	    
+	    function send_message() {
+		    //var textID = document.getElementById("textID");
+	    	//doSend(textID.value);
+	    }
+	
+	   function onOpen(evt) {
+	       //writeToScreen("Connected to Endpoint!");
+	       
+	        // idenitify monitor connection
+	        var msg = {	packet : 'login', name : 'mon', msg : '' };
+	        _websocket.send(JSON.stringify(msg));
+	    }
+	   
+	    function onMessage(evt) {
+    	    var msg = JSON.parse(event.data);
+    	    if (msg.packet == 'position') {
+    	    	_mon3d.setRobotPos(msg.id, msg.x, msg.y, msg.z);
+    	    }
+	    }
+	    
+	    function onError(evt) {
+	    }
+	    
+	    window.addEventListener("load", init, false);
+	</script>
+	
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="SimulSvr.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="..\Protocol\Src\robot_Protocol.cpp">
+      <Filter>Protocol_Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Protocol\Src\robot_ProtocolHandler.cpp">
+      <Filter>Protocol_Src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="..\Protocol\Src\robot_Protocol.h">
+      <Filter>Protocol_Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Protocol\Src\robot_ProtocolData.h">
+      <Filter>Protocol_Src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Protocol\Src\robot_ProtocolHandler.h">
+      <Filter>Protocol_Src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{716d3aee-690a-4562-8d7e-cb9c832f2dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol_Src">
+      <UniqueIdentifier>{19c92b55-67b9-407e-b203-c7c37fcbb3cf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Protocol\robot.prt">
+      <Filter>Protocol</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
