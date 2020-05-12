@@ -8,7 +8,7 @@ Web Browser WebSocket, TCP/IP Relay Sample with VS2017 C++, C#, Eclipse, Spring 
 - WebClient
   - Render Three.js Web 3D Engine
   - WebSocket Communication
-  - Render Robot (cube) by RealTime Robot Information from WebServer, WebSocket
+  - Render Robot (cube) by RealTime Robot Information from WebServer with WebSocket
   - java script
 - Simulation Server
   - VS2017 C++
