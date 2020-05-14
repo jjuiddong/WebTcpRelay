@@ -8,7 +8,7 @@ class cSimulationServer : robot::s2s_ProtocolHandler
 {
 public:
 	cSimulationServer() 
-		: m_incT(0), m_state(0), m_pos(0,0.5f,0)
+		: m_incT(0), m_state(0)//, m_pos(0,0.5f,0)
 	{
 		m_client.RegisterProtocol(&m_protocol);
 	}
@@ -34,17 +34,35 @@ public:
 
 			static float t = 0;
 			t += deltaSeconds * 0.3f;
-			m_pos = Vector3(cos(t), 0.f, sin(t)) * 5.f;
-			m_pos.y = 0.5f;
+
+			for (int i = 0; i < 10; ++i)
+			{
+				const int ix = i % 3;
+				const int iy = i / 3;
+
+				const float tt = t * ((i % 2)? 1.f : -1.f);
+				m_robots[i].pos = Vector3(cos(tt), 0.f, sin(tt)) * 3.f;
+				m_robots[i].pos.y = 0.5f;
+				m_robots[i].pos.x += (float)ix * 10.f - 15.f;
+				m_robots[i].pos.z += (float)iy * 10.f - 15.f;
+			}
+
+			//m_pos = Vector3(cos(t), 0.f, sin(t)) * 5.f;
+			//m_pos.y = 0.5f;
 			m_incT += deltaSeconds;
 
 			if (m_incT > 0.05f)
 			{
 				m_incT = 0.f;
-				const string msg = common::format("{\"packet\":\"position\", \"name\":\"mon\""
-					", \"id\":\"1\", \"x\":%f, \"y\":%f, \"z\":%f}"
-					, m_pos.x, m_pos.y, m_pos.z);
-				m_protocol.RealTimeInfo(network2::SERVER_NETID, msg);
+
+				for (int i = 0; i < 10; ++i)
+				{
+					const string msg = common::format("{\"packet\":\"position\", \"name\":\"mon\""
+						", \"id\":\"%d\", \"x\":%f, \"y\":%f, \"z\":%f}"
+						, i
+						, m_robots[i].pos.x, m_robots[i].pos.y, m_robots[i].pos.z);
+					m_protocol.RealTimeInfo(network2::SERVER_NETID, msg);
+				}
 			}
 		}
 
@@ -53,10 +71,14 @@ public:
 
 
 public:
-	int m_state;
+	int m_state; // 0:not login, 1:login
 	float m_incT;
-	Vector3 m_pos;
 
+	struct sRobot {
+		Vector3 pos;
+	};
+
+	sRobot m_robots[10];
 	network2::cTcpClient m_client; // connect to relay server
 	robot::s2s_Protocol m_protocol;
 };

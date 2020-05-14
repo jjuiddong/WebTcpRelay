@@ -4,7 +4,7 @@
 
 Mon3D = function() 
 {
-	var robots = [];
+	var _robots = [];
 	
 	this.initStats = function() 
 	{
@@ -21,41 +21,56 @@ Mon3D = function()
 	// update robot position
 	this.setRobotPos = function(robotId, x, y, z) 
 	{
-		for (var i=0; i < robots.length; ++i)
+		for (var i=0; i < _robots.length; ++i)
 		{
-			if (robots[i].id == Number(robotId))
+			if (_robots[i].id == Number(robotId))
 			{
-				robots[i].mesh.position.x = x;
-				robots[i].mesh.position.y = y;
-				robots[i].mesh.position.z = z;
+				_robots[i].rcv += 1;
+				_robots[i].mesh.position.x = x;
+				_robots[i].mesh.position.y = y;
+				_robots[i].mesh.position.z = z;
+				
+				switch (Number(robotId))
+				{
+				case 0: _controls.robotRcv0 += 1; break;
+				case 1: _controls.robotRcv1 += 1; break;				
+				case 2: _controls.robotRcv2 += 1; break;
+				case 3: _controls.robotRcv3 += 1; break;
+				case 4: _controls.robotRcv4 += 1; break;
+				case 5: _controls.robotRcv5 += 1; break;
+				case 6: _controls.robotRcv6 += 1; break;
+				case 7: _controls.robotRcv7 += 1; break;
+				case 8: _controls.robotRcv8 += 1; break;
+				case 9: _controls.robotRcv9 += 1; break;
+				}
 			}
 		}
 	}
 	
 	this.onWindowResize = function() 
 	{
-		camera.aspect = window.innerWidth / window.innerHeight;
-		camera.updateProjectionMatrix();
-		renderer.setSize( window.innerWidth - 20, window.innerHeight - 20);
+		_camera.aspect = window.innerWidth / window.innerHeight;
+		_camera.updateProjectionMatrix();
+		_renderer.setSize( window.innerWidth - 20, window.innerHeight - 20);
 	}
 	
 	this.render = function() 
 	{
-	    stats.update();
-	    orbit.update();
-	    renderer.clear();
-	    renderer.render(scene, camera);
+	    _stats.update();
+	    _orbit.update();
+	    _renderer.clear();
+	    _renderer.render(_scene, _camera);
 	}	
 	
 
 	
-	var stats = this.initStats();
-	var scene = new THREE.Scene();
-	var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-	var renderer = new THREE.WebGLRenderer();
-	renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
-	renderer.setSize(window.innerWidth-20, window.innerHeight-20);
-	renderer.shadowMapEnabled = true;
+	var _stats = this.initStats();
+	var _scene = new THREE.Scene();
+	var _camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+	var _renderer = new THREE.WebGLRenderer();
+	_renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+	_renderer.setSize(window.innerWidth-20, window.innerHeight-20);
+	_renderer.shadowMapEnabled = true;
 	
 	var planeGeometry = new THREE.PlaneGeometry(50, 50, 1, 1);
 	var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
@@ -66,25 +81,25 @@ Mon3D = function()
 	plane.position.x = 0;
 	plane.position.y = -0.01;
 	plane.position.z = 0;
-	scene.add(plane);
+	_scene.add(plane);
 	
 	var lookAt = new THREE.Vector3(0,0,0)
-	camera.position.x = -50.30815606782114;
-	camera.position.y = 51;
-	camera.position.z = 69.9671279843572;
-	camera.lookAt(lookAt);
+	_camera.position.x = -50.30815606782114;
+	_camera.position.y = 51;
+	_camera.position.z = 69.9671279843572;
+	_camera.lookAt(lookAt);
 	
 	//var clock = new THREE.Clock();
-	var orbit = new THREE.CameraControls(camera);	
-	orbit.center = lookAt;
+	var _orbit = new THREE.CameraControls(_camera);	
+	_orbit.center = lookAt;
 	
 	var ambientLight = new THREE.AmbientLight(0x0c0c0c);
-	scene.add(ambientLight);
+	_scene.add(ambientLight);
 	
 	var spotLight = new THREE.SpotLight(0xffffff);
 	spotLight.position.set(60, 60, 60);
 	spotLight.castShadow = true;
-	scene.add(spotLight);
+	_scene.add(spotLight);
 	
     var points = [];
     var z = 0.01;
@@ -115,43 +130,57 @@ Mon3D = function()
     var line = new THREE.Line(lines, material);
     line.position.set(-25, 0, -25);
     line.mode = THREE.Lines;
-    scene.add(line);
+    _scene.add(line);
     
     var colors = [0xff0000, 0x00ff00];
-    for (var i=0; i < 2; ++i)
+    for (var i=0; i < 10; ++i)
 	{
         var size = 1;
         var cubeGeometry = new THREE.BoxGeometry(size,size,size);
-        var cubeMaterial = new THREE.MeshLambertMaterial({color: colors[i]});
+        var cubeMaterial = new THREE.MeshLambertMaterial({color: colors[i%2]});
         //var wireFrameMat = new THREE.MeshBasicMaterial({color: 0x000000});
         //var cube = THREE.SceneUtils.createMultiMaterialObject(cubeGeometry, [cubeMaterial, wireFrameMat]);
     	var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     	cube.castShadow = true;
     	cube.position.x = i * 2;
     	cube.position.y = 0.5;
-    	cube.position.z = 0;    	
-    	scene.add(cube);
+    	cube.position.z = 0;
+    	_scene.add(cube);
     	
-    	robots.push( {id:i, mesh:cube} );	
+    	_robots.push( {id:i, rcv:0, mesh:cube} );
 	}
     
 	
 	// add the output of the renderer to the html element
-	document.getElementById("WebGL-output").appendChild(renderer.domElement);
+	document.getElementById("WebGL-output").appendChild(_renderer.domElement);
 	
-	
-	// call the render function
+	// dat.GUI
 	//var step = 0;
-	var controls = new function () {
+	var _controls = new function () {
 	    this.rotationSpeed = 0.02;
 	    this.bouncingSpeed = 0.03;
 	    //this.effect = true;
+	    this.robotRcv0 = 0;
+	    this.robotRcv1 = 0;
+	    this.robotRcv2 = 0;
+	    this.robotRcv3 = 0;
+	    this.robotRcv4 = 0;
+	    this.robotRcv5 = 0;
+	    this.robotRcv6 = 0;
+	    this.robotRcv7 = 0;
+	    this.robotRcv8 = 0;
+	    this.robotRcv9 = 0;
 	};
 
 	var gui = new dat.GUI();
-	//gui.add( controls, 'effect' );
+	var ids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+	for (var i=0; i < 10; ++i)
+	{
+		var rcv = gui.add( _controls, 'robotRcv' + ids[i] ).listen();
+		rcv.domElement.style.pointerEvents = 'none';
+	}
 	
-	this.render();
+	this.render(); 	// call the render function
 	
 	window.addEventListener('resize', this.onWindowResize, false );
 	

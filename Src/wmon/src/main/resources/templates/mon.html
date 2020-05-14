@@ -22,7 +22,8 @@
 	    var _wsUri = "ws://jjuiddong.iptime.org:8080/wsock";
 	    var _websocket;
 	    var _mon3d;
-
+	    var robotInfo = new Map();
+	    
         
 	    function init() {
 	        //_output = document.getElementById("output");
@@ -59,6 +60,13 @@
 	    function onMessage(evt) {
     	    var msg = JSON.parse(event.data);
     	    if (msg.packet == 'position') {
+    	    	if (robotInfo.has(msg.id) == false) {
+    	    		robotInfo.set(msg.id, 0);
+    	    	}
+    	    	
+    	    	var n = Number(robotInfo.get(msg.id)) + 1;
+    	    	robotInfo.set(msg.id, n);    	    	
+    	    	
     	    	_mon3d.setRobotPos(msg.id, msg.x, msg.y, msg.z);
     	    }
 	    }

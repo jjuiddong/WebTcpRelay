@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+Src/SimulSvr/SimulSvr/errlog.txt
+Src/SimulSvr/SimulSvr/log.txt
